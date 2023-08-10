@@ -1,11 +1,14 @@
 package com.keylane.entity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.ManyToMany;
 
 @Entity
 public class Policy {
@@ -20,20 +23,24 @@ public class Policy {
 	@Column
 	private String policyName;
 
-	@ManyToOne
-	private PersonCq personCq;
+	@ManyToMany(mappedBy = "policies")
+    private List<PersonCq> persons = new ArrayList<>();
 
 	public Policy() {
 		super();
 	}
 
-	public Policy(Integer id, String policyNumber, String policyName, PersonCq personCq) {
+	
+
+	public Policy(Integer id, String policyNumber, String policyName, List<PersonCq> persons) {
 		super();
 		Id = id;
 		this.policyNumber = policyNumber;
 		this.policyName = policyName;
-		this.personCq = personCq;
+		this.persons = persons;
 	}
+
+
 
 	public Integer getId() {
 		return Id;
@@ -59,12 +66,18 @@ public class Policy {
 		this.policyNumber = policyNumber;
 	}
 
-	public PersonCq getPersonCq() {
-		return personCq;
+
+
+	public List<PersonCq> getPersons() {
+		return persons;
 	}
 
-	public void setPersonCq(PersonCq personCq) {
-		this.personCq = personCq;
+
+
+	public void setPersons(List<PersonCq> persons) {
+		this.persons = persons;
 	}
+
+	
 
 }

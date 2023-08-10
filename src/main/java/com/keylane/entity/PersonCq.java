@@ -1,8 +1,8 @@
 package com.keylane.entity;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
@@ -13,7 +13,9 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
@@ -35,7 +37,7 @@ public class PersonCq {
 	private Long age;
 
 	@Temporal(TemporalType.DATE)
-	private Date birthDate;
+	private LocalDate birthDate;
 
 	@Column
 	private String birthPlace;
@@ -44,7 +46,7 @@ public class PersonCq {
 	private LocalDateTime changeTime;
 
 	@Temporal(TemporalType.DATE)
-	private Date deathDate;
+	private LocalDate deathDate;
 
 	@Column
 	private String emailAddress;
@@ -58,16 +60,17 @@ public class PersonCq {
 	@OneToOne(cascade = CascadeType.ALL)
 	private Address address;
 
-	@OneToMany(mappedBy = "personCq", cascade = CascadeType.ALL, orphanRemoval = true)
-	private List<Policy> policyList = new ArrayList<>();
+	@ManyToMany(cascade = CascadeType.ALL)
+	@JoinTable(name = "person_policy", joinColumns = @JoinColumn(name = "person_id"), inverseJoinColumns = @JoinColumn(name = "policy_id"))
+	private List<Policy> policies = new ArrayList<>();
 
 	public PersonCq() {
 		super();
 	}
 
-	public PersonCq(Long id, String name, Long age, Date birthDate, String birthPlace, LocalDateTime changeTime,
-			Date deathDate, String emailAddress, String phoneNumber, Gender gender, Address address,
-			List<Policy> policyList) {
+	public PersonCq(Long id, String name, Long age, LocalDate birthDate, String birthPlace, LocalDateTime changeTime,
+			LocalDate deathDate, String emailAddress, String phoneNumber, Gender gender, Address address,
+			List<Policy> policies) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -80,7 +83,7 @@ public class PersonCq {
 		this.phoneNumber = phoneNumber;
 		this.gender = gender;
 		this.address = address;
-		this.policyList = policyList;
+		this.policies = policies;
 	}
 
 	public Long getAge() {
@@ -91,12 +94,12 @@ public class PersonCq {
 		this.age = age;
 	}
 
-	public Date getBirthDate() {
+	public LocalDate getBirthDate() {
 		return birthDate;
 	}
 
-	public void setBirthDate(Date birthDate) {
-		this.birthDate = birthDate;
+	public void setBirthDate(LocalDate localDate) {
+		this.birthDate = localDate;
 	}
 
 	public String getBirthPlace() {
@@ -115,11 +118,11 @@ public class PersonCq {
 		this.changeTime = changeTime;
 	}
 
-	public Date getDeathDate() {
+	public LocalDate getDeathDate() {
 		return deathDate;
 	}
 
-	public void setDeathDate(Date deathDate) {
+	public void setDeathDate(LocalDate deathDate) {
 		this.deathDate = deathDate;
 	}
 
@@ -163,12 +166,12 @@ public class PersonCq {
 		this.id = id;
 	}
 
-	public List<Policy> getPolicyList() {
-		return policyList;
+	public List<Policy> getPolicies() {
+		return policies;
 	}
 
-	public void setPolicyList(List<Policy> policyList) {
-		this.policyList = policyList;
+	public void setPolicies(List<Policy> policies) {
+		this.policies = policies;
 	}
 
 	public String getName() {
